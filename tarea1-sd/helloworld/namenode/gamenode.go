@@ -141,7 +141,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 	return &pb.StoredReply{Message: "No se pudo guardar"}, nil
 }
 
-func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePlays, error){
+/* func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePlays, error){
 	for _, v:= range SearchPlayerPlays(in.GetId()){
 		conn, err := grpc.Dial(v.direccion, grpc.WithInsecure(), grpc.WithBlock())
 
@@ -156,7 +156,7 @@ func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePl
 			ctx := context.Background()
 			r, err := client.PullJugadas(ctx, &pb.PingMsg{Id: in.GetId()})
 		}
-}
+}*/
 
 func main() {
 
