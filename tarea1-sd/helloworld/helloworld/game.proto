@@ -1,0 +1,51 @@
+package tarea1-sd
+syntax = "proto3";
+
+option go_package = "/game";
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+
+// Service definiton
+service Game {
+
+    // Sends init game
+    rpc BeginGame (BeginRequest) returns (BeginReply) { }
+
+    // Sends end game
+    rpc EndGame (EndRequest) returns (EndReply) { }
+
+    // Begin Stage
+    rpc BeginStage (BeginStage) returns (EndStage) { }  
+}
+
+// The request message
+message BeginRequest {
+    string message = 1;
+}
+
+// The response message
+message BeginReply {
+    string message = 1;
+}
+
+// End request message
+message EndRequest {
+    string message = 1;
+}
+
+// End reply message
+message EndReply {
+    string message = 2;
+}
+
+// Begin Stage
+message BeginStage {
+    string stage = 1; // enviar la etapa
+}
+
+// End Stage
+message EndStage {
+    string stage = 1;
+}
+

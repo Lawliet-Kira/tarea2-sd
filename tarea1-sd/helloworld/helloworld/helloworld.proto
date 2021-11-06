@@ -1,0 +1,154 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option go_package = "lab1/game/helloworld";
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+
+package helloworld;
+
+// The greeting service definition.
+
+service Game {
+
+    
+    // Sends Join game
+    rpc JoinGame (JoinRequest) returns (JoinReply) { }
+
+    rpc BeginGame (BeginRequest) returns (BeginReply) { }
+    // Sends end game
+    rpc EndGame (EndRequest) returns (EndReply) { }
+
+    // Begin Stage
+    rpc BeginStage (BeginStageRequest) returns (BeginStageReply) { } 
+
+    rpc BeginRound (PingMsg) returns (BeginRoundReply) { }
+
+    rpc SendJugadaE1(JugadaE1) returns (PlayerStatusE1) { }
+    
+    rpc SendJugadaE2(JugadaE2) returns (PingMsg) { }
+
+    rpc SendJugadaE3(JugadaE3) returns (PingMsg) { }
+
+    rpc IsAlready(PingMsg) returns (PlayerStatusE2) {}
+
+    rpc IsAlready2(PingMsg) returns (PlayerStatusE3) {}
+
+    rpc SendJugadas(StagePlays) returns (StoredReply){}
+    
+    rpc PullJugadas(PingMsg) returns (StagePlays)
+
+    
+}
+message PingMsg {
+  int32 id = 1;
+}
+// The request message
+message JoinRequest {
+    int32 id = 1;
+    string message = 2;
+    string name = 3;
+}
+
+// The response message
+message JoinReply {
+  int32 id = 1;
+  string message = 2;
+}
+
+message BeginRequest {
+  int32 id = 1;
+  string message = 2;
+}
+
+message BeginReply {
+  bool message = 1;
+  int32 online = 2;
+}
+
+// End request message
+message EndRequest {
+  int32 id = 1;
+  string message = 2;
+}
+
+// End reply message
+message EndReply {
+  string message = 1;
+}
+
+// BeginStageRequest
+message BeginStageRequest {
+  int32 id = 1;
+  string stage = 2; // enviar la etapa
+}
+
+// BeginStageReply
+message BeginStageReply {
+  bool stage = 1;
+  bool dead = 2;
+}
+
+
+// BeginRoundReply
+message BeginRoundReply {
+  bool round = 1;
+}
+
+// JugadaE1
+message JugadaE1 {
+  int32 id = 1;
+  int32 jugada = 2;
+  int32 suma_actual = 3;
+}
+
+
+message PlayerStatusE1 {
+  int32 suma_total = 1;
+  bool dead = 2;
+  int32 ronda = 3;
+}
+
+message JugadaE2 {
+  int32 id = 1;
+  int32 jugada = 2;
+}
+message PlayerStatusE2{
+  bool ready = 1;
+  bool dead = 2;
+}
+
+message JugadaE3 {
+  int32 id = 1;
+  int32 jugada = 2;
+}
+
+message PlayerStatusE3{
+  bool ready = 1;
+  bool dead = 2;
+}
+
+message StagePlays{
+  int32 id = 1;
+  int32 etapa = 2;
+  int32 jugada = 3;
+  repeated int32 jugadasList = 4;
+}
+ 
+message StoredReply {
+  string message = 1;
+}
