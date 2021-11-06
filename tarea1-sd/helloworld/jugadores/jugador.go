@@ -47,13 +47,9 @@ func ItoS(n int32) string {
 		}
 	}
 }
-func Jugador() {
-
-	return
-}
 
 const (
-	address     = "localhost:50051"
+	address     = "10.6.43.113:50051"
 	defaultName = "world"
 )
 
@@ -78,9 +74,9 @@ func main() {
 	ctx := context.Background()
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	r, err := client.JoinGame(ctx, &pb.JoinRequest{Id: id, Message: message, Name: name})
-	
+
 	id = r.GetId()
-	
+
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
@@ -97,7 +93,7 @@ func main() {
 		}
 		comienzaeljuego = r.GetMessage()
 		Jugadoresonline := r.GetOnline()
-		fmt.Println(">> Jugadores online: "+ itoS(Jugadoresonline))
+		fmt.Println(">> Jugadores online: " + itoS(Jugadoresonline))
 	}
 
 	// SOLICITUD A LA PRIMERA ETAPA
@@ -107,7 +103,7 @@ func main() {
 	for !comienzalaetapa {
 
 		time.Sleep(10 * time.Second)
-		r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id , Stage: stage})
+		r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id, Stage: stage})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
@@ -121,53 +117,53 @@ func main() {
 	var newEtapa bool = true
 	// Loop de rondas
 	for newEtapa {
-		
+
 		var numero int
 		fmt.Println("Ingrese su jugada (Número del 1-10):")
-		_, err =  fmt.Scanf("%d",&numero)
+		_, err = fmt.Scanf("%d", &numero)
 		jugada := int32(numero)
-		
+
 		r, err := client.SendJugadaE1(ctx, &pb.JugadaE1{Id: id, Jugada: jugada, SumaActual: suma_actual})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
 		dead = r.GetDead()
-		if dead{
+		if dead {
 			fmt.Println("Has muerto...")
 			return
 		}
 		suma_actual = r.GetSumaTotal()
 		ronda := r.GetRonda()
-		fmt.Println("Suma total"+ itoS(suma_actual)+" ronda: " + itoS(ronda))
+		fmt.Println("Suma total" + itoS(suma_actual) + " ronda: " + itoS(ronda))
 		if ronda == 4 {
 			newEtapa = false
 		}
-		var newRound bool = false	
-		for !newRound{
+		var newRound bool = false
+		for !newRound {
 			fmt.Println("Aun no comienza la ronda")
-			time.Sleep(5*time.Second)
-			response,err := client.BeginRound(ctx, &pb.PingMsg{Id: id})
+			time.Sleep(5 * time.Second)
+			response, err := client.BeginRound(ctx, &pb.PingMsg{Id: id})
 			if err != nil {
 				log.Fatalf("could not greet: %v", err)
 			}
 			newRound = response.GetRound()
-			
+
 		}
-		
+
 	}
 	var action string
-	
+
 	comienzalaetapa = false
 	for !comienzalaetapa {
 		fmt.Println("Ingrese accion: play = comenzar nueva etapa; check = ver pozo")
 		fmt.Scanln(&action)
-		if action == "play"{
-			r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id , Stage: stage})
+		if action == "play" {
+			r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id, Stage: stage})
 			if err != nil {
 				log.Fatalf("could not greet: %v", err)
 			}
 			comienzalaetapa = r.GetStage()
-			if !comienzalaetapa{
+			if !comienzalaetapa {
 				fmt.Println("Registrado para la siguiente etapa, esperando jugadores")
 			}
 		}
@@ -177,32 +173,31 @@ func main() {
 	fmt.Println("Comienza la Etapa 2.")
 	newEtapa = false
 	for !newEtapa {
-		
+
 		var numero int
 		fmt.Println("Ingrese su jugada (Número del 1-4):")
-		_, err =  fmt.Scanf("%d",&numero)
+		_, err = fmt.Scanf("%d", &numero)
 		jugada := int32(numero)
-		
+
 		_, err := client.SendJugadaE2(ctx, &pb.JugadaE2{Id: id, Jugada: jugada})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
-		
 
 		var newRound bool = false
-		for !newRound{
+		for !newRound {
 			fmt.Println("Aun no comienza la ronda")
-			time.Sleep(5*time.Second)
-			response,err := client.IsAlready(ctx, &pb.PingMsg{Id: id})
+			time.Sleep(5 * time.Second)
+			response, err := client.IsAlready(ctx, &pb.PingMsg{Id: id})
 			if err != nil {
 				log.Fatalf("could not greet: %v", err)
 			}
 			newRound = response.GetReady()
 			newEtapa = true
 			dead = response.GetDead()
-			if dead{
+			if dead {
 				return
-			}		
+			}
 		}
 
 	}
@@ -211,13 +206,13 @@ func main() {
 	for !comienzalaetapa {
 		fmt.Println("Ingrese accion: play = comenzar nueva etapa; check = ver pozo")
 		fmt.Scanln(&action)
-		if action == "play"{
-			r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id , Stage: stage})
+		if action == "play" {
+			r, err := client.BeginStage(ctx, &pb.BeginStageRequest{Id: id, Stage: stage})
 			if err != nil {
 				log.Fatalf("could not greet: %v", err)
 			}
 			comienzalaetapa = r.GetStage()
-			if !comienzalaetapa{
+			if !comienzalaetapa {
 				fmt.Println("Registrado para la siguiente etapa, esperando jugadores")
 			}
 		}
@@ -225,35 +220,34 @@ func main() {
 	}
 
 	newEtapa = false
-	for !newEtapa{
+	for !newEtapa {
 
 		var numero int
 		fmt.Println("Ingrese su jugada (Número del 1-10):")
-		_, err =  fmt.Scanf("%d",&numero)
+		_, err = fmt.Scanf("%d", &numero)
 		jugada := int32(numero)
-		
+
 		_, err := client.SendJugadaE3(ctx, &pb.JugadaE3{Id: id, Jugada: jugada})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
-		
 
 		var newRound bool = false
-		for !newRound{
+		for !newRound {
 			fmt.Println("Aun no comienza la ronda")
-			time.Sleep(5*time.Second)
-			response,err := client.IsAlready2(ctx, &pb.PingMsg{Id: id})
+			time.Sleep(5 * time.Second)
+			response, err := client.IsAlready2(ctx, &pb.PingMsg{Id: id})
 			if err != nil {
 				log.Fatalf("could not greet: %v", err)
 			}
 			newRound = response.GetReady()
 			newEtapa = true
 			dead = response.GetDead()
-			if dead{
+			if dead {
 				return
-			}		
+			}
 		}
 	}
 	return
-		
+
 }
