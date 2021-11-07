@@ -10,7 +10,7 @@ player:
 server:
 	go run lider/lider.go
 
-namenode:
+gamenode:
 	go run namenode/gamenode.go
 	
 datanode:
