@@ -70,7 +70,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 	var locating string
 	switch machine := rand.Intn(4); machine {
 	case 1:
-		locating = "10.6.43.113:50051"
+		locating = "10.6.43.113:50053"
 	case 2:
 		locating = "10.6.43.116:50053"
 	case 3:
