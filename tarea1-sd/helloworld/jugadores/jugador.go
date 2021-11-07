@@ -128,6 +128,7 @@ func main() {
 			log.Fatalf("could not greet: %v", err)
 		}
 		dead = r.GetDead()
+
 		if dead {
 			fmt.Println("Has muerto...")
 			return

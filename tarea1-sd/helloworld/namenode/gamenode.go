@@ -76,6 +76,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 	case 3:
 		locating = "10.6.43.115:50053"
 	}
+	fmt.Println(locating)
 	if SearchPlayerPlays(PlayerPlays, in.GetId()) == nil {
 		newVisitor := newPlayer(in.GetId())
 		PlayerPlays = append(PlayerPlays, *newVisitor)
