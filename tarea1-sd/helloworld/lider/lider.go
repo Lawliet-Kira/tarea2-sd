@@ -359,7 +359,8 @@ func (s *server) SendJugadaE2(ctx context.Context, in *pb.JugadaE2) (*pb.PingMsg
 			suma_T2 = suma_T2 + jugada_jugador
 		}
 	}
-	conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure(), grpc.WithBlock())
+
+	conn, err := grpc.Dial(gamenodeAddress, grpc.WithInsecure(), grpc.WithBlock())
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)

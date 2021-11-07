@@ -115,6 +115,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 					ctx := context.Background()
 					//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 					r, err := client.SendJugadas(ctx, &pb.StagePlays{Id: in.GetId(), Etapa: in.GetEtapa(), JugadasList: arr_locations[i].jugadas})
+					fmt.Println(r.GetMessage())
 					return &pb.StoredReply{Message: r.GetMessage()}, nil
 				}
 
@@ -133,6 +134,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 				ctx := context.Background()
 				//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 				r, err := client.SendJugadas(ctx, &pb.StagePlays{Id: in.GetId(), Etapa: in.GetEtapa(), JugadasList: arr_locations[i].jugadas})
+				fmt.Println(r.GetMessage())
 				return &pb.StoredReply{Message: r.GetMessage()}, nil
 			}
 
