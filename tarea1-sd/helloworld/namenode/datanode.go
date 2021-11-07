@@ -71,9 +71,9 @@ func (s *DataNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 	etapa := in.GetEtapa()
 	jugadas := in.GetJugadasList()
 
-	path := "files/jugador_" + ItoS(id_jugador) + "__ronda_" + ItoS(etapa) + ".txt"
+	path := "/../files/jugador_" + ItoS(id_jugador) + "__ronda_" + ItoS(etapa) + ".txt"
 
-	createFile(path)
+	//createFile(path)
 
 	data := ""
 
