@@ -93,7 +93,7 @@ func main() {
 		}
 		comienzaeljuego = r.GetMessage()
 		Jugadoresonline := r.GetOnline()
-		fmt.Println(">> Jugadores online: " + itoS(Jugadoresonline))
+		fmt.Println(">> Jugadores online: " + ItoS(Jugadoresonline))
 	}
 
 	// SOLICITUD A LA PRIMERA ETAPA
@@ -134,7 +134,7 @@ func main() {
 		}
 		suma_actual = r.GetSumaTotal()
 		ronda := r.GetRonda()
-		fmt.Println("Suma total" + itoS(suma_actual) + " ronda: " + itoS(ronda))
+		fmt.Println("Suma total" + ItoS(suma_actual) + " ronda: " + ItoS(ronda))
 		if ronda == 4 {
 			newEtapa = false
 		}

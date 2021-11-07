@@ -210,7 +210,7 @@ func (s *server) BeginStage(ctx context.Context, in *pb.BeginStageRequest) (*pb.
 	if int32(len(jugadores_etapa)) == players_alive {
 		begin = true
 	}
-	if roundE1 == 4{
+	if roundE1 == 4 {
 		etapa = 2
 	}
 	if etapa == 2 && begin {
@@ -290,7 +290,7 @@ func (s *server) SendJugadaE1(ctx context.Context, in *pb.JugadaE1) (*pb.PlayerS
 		jugadores_turno = nil
 		roundE1++
 		fmt.Println("El numero elegido por el lider es: " + ItoS(optLider))
-		
+
 	}
 	curr_sum = in.GetJugada() + in.GetSumaActual()
 
@@ -326,7 +326,7 @@ func (s *server) SendJugadaE1(ctx context.Context, in *pb.JugadaE1) (*pb.PlayerS
 		contador_muertos++
 		fmt.Println("Ha muerto el jugador " + ItoS(in.GetId()))
 	}
-	conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(gamenodeAddress, grpc.WithInsecure(), grpc.WithBlock())
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -340,7 +340,7 @@ func (s *server) SendJugadaE1(ctx context.Context, in *pb.JugadaE1) (*pb.PlayerS
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	r, err := client.SendJugadas(ctx, &pb.StagePlays{Id: id_jugador, Etapa: int32(etapa), Jugada: in.GetJugada()})
 	fmt.Println(r.GetMessage())
-	
+
 	return &pb.PlayerStatusE1{SumaTotal: curr_sum, Dead: dead, Ronda: roundE1}, nil
 
 }
@@ -502,7 +502,8 @@ func (s *server) BeginRound(ctx context.Context, in *pb.PingMsg) (*pb.BeginRound
 }
 
 const (
-	port = ":50051"
+	port            = ":50051"
+	gamenodeAddress = "10.6.43.114:50052"
 )
 
 func main() {

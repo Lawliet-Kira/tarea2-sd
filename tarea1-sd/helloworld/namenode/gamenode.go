@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+
 	//"encoding/json"
 	"log"
 	"math/rand"
@@ -20,27 +21,27 @@ type NameNode struct {
 }
 
 type Location struct {
-	
-	etapa int32
-	jugadas []int32
-	direccion string 
+	etapa     int32
+	jugadas   []int32
+	direccion string
 }
 
-type Player struct{
-	id int32
+type Player struct {
+	id     int32
 	played []Location
-	
 }
+
 const (
 	port = ":50052"
 )
-func newLocation(etapa int32, direccion string) * Location{
+
+func newLocation(etapa int32, direccion string) *Location {
 	var jugadas []int32
 	new := Location{etapa: etapa, direccion: direccion, jugadas: jugadas}
 	return &new
 }
 
-func newPlayer(id int32) * Player{
+func newPlayer(id int32) *Player {
 	var locationList []Location
 	locationList = append(locationList, *newLocation(1, ""))
 	locationList = append(locationList, *newLocation(2, ""))
@@ -49,11 +50,11 @@ func newPlayer(id int32) * Player{
 	return &new
 }
 
-func SearchPlayerPlays(PlayerList []Player, id int32) []Location{
+func SearchPlayerPlays(PlayerList []Player, id int32) []Location {
 	var locating []Location
-	locating = nil 
-	for _,player := range PlayerList{
-		if player.id == id{
+	locating = nil
+	for _, player := range PlayerList {
+		if player.id == id {
 			locating = player.played
 			return locating
 		}
@@ -67,16 +68,15 @@ var PlayerPlays []Player
 func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.StoredReply, error) {
 	rand.Seed(time.Now().UnixNano())
 	var locating string
-	switch machine := rand.Intn(4); machine{
-		case 1:
-			locating = ""
-		case 2:
-			locating = ""
-		case 3:
-			locating = ""	
+	switch machine := rand.Intn(4); machine {
+	case 1:
+		locating = "10.6.43.113:50051"
+	case 2:
+		locating = "10.6.43.116:50053"
+	case 3:
+		locating = "10.6.43.115:50053"
 	}
-	locating = "localhost:50053"
-	if SearchPlayerPlays(PlayerPlays, in.GetId()) == nil{
+	if SearchPlayerPlays(PlayerPlays, in.GetId()) == nil {
 		newVisitor := newPlayer(in.GetId())
 		PlayerPlays = append(PlayerPlays, *newVisitor)
 		fmt.Print("New Visitor  ")
@@ -86,20 +86,20 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 	arr_locations := SearchPlayerPlays(PlayerPlays, in.GetId())
 
 	//for _, v := range SearchPlayerPlays(PlayerPlays, in.GetId()){
-	for i := 0 ; i < len(arr_locations) ; i++ {
-		fmt.Print("Player:")
-		fmt.Println(in.GetId())
-		fmt.Print("Iterando en etapa ")
-		fmt.Println(arr_locations[i].etapa)
-		fmt.Print("Recibido ")
-		fmt.Println(in.GetEtapa())
+	for i := 0; i < len(arr_locations); i++ {
+		// fmt.Print("Player:")
+		// fmt.Println(in.GetId())
+		// fmt.Print("Iterando en etapa ")
+		// fmt.Println(arr_locations[i].etapa)
+		// fmt.Print("Recibido ")
+		// fmt.Println(in.GetEtapa())
 		if in.GetEtapa() == arr_locations[i].etapa {
 			arr_locations[i].jugadas = append(arr_locations[i].jugadas, in.GetJugada())
 			arr_locations[i].direccion = locating
 			if in.GetEtapa() == 1 {
 				fmt.Print("Jugadas:")
 				fmt.Println(arr_locations[i].jugadas)
-				if len(arr_locations[i].jugadas) == 4{
+				if len(arr_locations[i].jugadas) == 4 {
 					fmt.Println("Enviando etapa 1 a datanode")
 					conn, err := grpc.Dial(locating, grpc.WithInsecure(), grpc.WithBlock())
 
@@ -117,7 +117,7 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 					return &pb.StoredReply{Message: r.GetMessage()}, nil
 				}
 
-			}else{
+			} else {
 				//enviar a Datanode
 				conn, err := grpc.Dial(locating, grpc.WithInsecure(), grpc.WithBlock())
 
@@ -134,14 +134,14 @@ func (s *NameNode) SendJugadas(ctx context.Context, in *pb.StagePlays) (*pb.Stor
 				r, err := client.SendJugadas(ctx, &pb.StagePlays{Id: in.GetId(), Etapa: in.GetEtapa(), JugadasList: arr_locations[i].jugadas})
 				return &pb.StoredReply{Message: r.GetMessage()}, nil
 			}
-			
+
 		}
 
 	}
 	return &pb.StoredReply{Message: "No se pudo guardar"}, nil
 }
 
-func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePlays, error){
+/* func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePlays, error){
 	for _, v:= range SearchPlayerPlays(in.GetId()){
 		conn, err := grpc.Dial(v.direccion, grpc.WithInsecure(), grpc.WithBlock())
 
@@ -156,7 +156,7 @@ func (s *NameNode) PullJugadas(ctx context.Context, in *pb.PingMsg) (*pb.StagePl
 			ctx := context.Background()
 			r, err := client.PullJugadas(ctx, &pb.PingMsg{Id: in.GetId()})
 		}
-}
+} */
 
 func main() {
 
